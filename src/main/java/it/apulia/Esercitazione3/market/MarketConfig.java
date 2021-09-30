@@ -6,6 +6,8 @@ import it.apulia.Esercitazione3.accessManagement.model.Utente;
 import it.apulia.Esercitazione3.market.carrello.Carrello;
 import it.apulia.Esercitazione3.market.carrello.CarrelloRepo;
 import it.apulia.Esercitazione3.market.carrello.VoceScontrino;
+import it.apulia.Esercitazione3.market.cliente.Cliente;
+import it.apulia.Esercitazione3.market.cliente.ClienteRepo;
 import it.apulia.Esercitazione3.market.prodotti.Prodotto;
 import it.apulia.Esercitazione3.market.prodotti.ProductsRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,9 +26,14 @@ import java.util.List;
 public class MarketConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(UserService userService, ProductsRepo repository, CarrelloRepo repoCarrello) {
+    CommandLineRunner commandLineRunner(UserService userService, ProductsRepo repository,
+                                        CarrelloRepo repoCarrello, ClienteRepo clienteRepo) {
         return args -> {
 
+            repository.deleteAll();
+            repoCarrello.deleteAll();
+            clienteRepo.deleteAll();
+            userService.resetAll();
             /****USERS*****/
             userService.saveRole(new Role("ROLE_USER"));
             //userService.saveRole(new Role("ROLE_MANAGER"));
@@ -37,14 +45,34 @@ public class MarketConfig {
             userService.saveUtente(new Utente(null, "jim@email.com", "1234", new ArrayList<>()));
             userService.saveUtente(new Utente(null, "arnold", "1234", new ArrayList<>()));
 
+            userService.saveUtente(new Utente(null, "prince@genie.magic", "1234", new ArrayList<>()));
+
             userService.addRoleToUtente("john@email.com", "ROLE_USER");
             //userService.addRoleToUtente("will", "ROLE_MANAGER");
             userService.addRoleToUtente("jim@email.com", "ROLE_ADMIN");
             userService.addRoleToUtente("arnold", "ROLE_SUPER_ADMIN");
             userService.addRoleToUtente("arnold", "ROLE_ADMIN");
             userService.addRoleToUtente("arnold", "ROLE_USER");
+            userService.addRoleToUtente("prince@genie.magic", "ROLE_USER");
 
-            log.info("Utenti caricati");
+            log.info("Utenti e ruoli caricati");
+
+            /****CLIENTI***/
+            Cliente cliente = new Cliente("John","Wick","john@email.com", LocalDate.of(1980,2,18),
+                    "Via di qui, 15","Dogcity",4321,"555-DOG",
+                    "http://localhost:8080/clientManagement/john@email.com",300.00);
+            Cliente cliente1 = new Cliente("Arnold","aaa","arnold",
+                    LocalDate.of(1947,7,30),"Via di qua, 3",
+                    "Distopia",1234,"555-SKYNET",
+                    "http://localhost:8080/clientManagement/arnold",1999.00);
+            Cliente cliente2 = new Cliente("Aladdin","Straccione","prince@genie.magic",
+                    LocalDate.of(1001,2,28),"Topaia, 0",
+                    "Agrabah",7890,"555-I4ABU",
+                    "http://localhost:8080/clientManagement/prince@genie.magic",2.00);
+
+            clienteRepo.saveAll(List.of(cliente,cliente1,cliente2));
+
+            log.info("Clienti caricati");
 
 
             Prodotto prodotto1 = new Prodotto(10001,"Latte",1.20, "http://localhost:8080/market/prodotti/10001");
@@ -79,14 +107,17 @@ public class MarketConfig {
             tempcr.add(carrello1);
             tempcr.add(carrello2);
 
-            repository.deleteAll();
-            repoCarrello.deleteAll();
+
 
             repository.saveAll(
                     temp
             );
 
             repoCarrello.saveAll(tempcr);
+
+            log.info("Prodotti e carrello caricati");
+
+
         };
 
     }
