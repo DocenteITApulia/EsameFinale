@@ -43,9 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //http.authorizeRequests().anyRequest().hasAnyAuthority("ROLE_SUPER_ADMIN"); //permette al super admin di fare qualunque operazione
         http.authorizeRequests().antMatchers("/accessManager/login/**", "/accessManager/token/refresh/**").permitAll();
         //NON AUTENTICATO - registrazione passeggero e info tabelloni
-        http.authorizeRequests().antMatchers(POST,"/agencymng/passengers/newregistration").permitAll();
-        http.authorizeRequests().antMatchers(GET,"/utils/tabellone/**").permitAll();
-
+        http.authorizeRequests().antMatchers(POST,"/clientManagement").permitAll();
+/*
         //PERMESSI ADMIN
         http.authorizeRequests().antMatchers( "/accessManager/utenti/**", "/accessManager/roles/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers( "/agencymng/passengers/listall","/flights/**").hasAnyAuthority("ROLE_ADMIN");
@@ -56,13 +55,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(PUT, "/agencymng/bookings/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(DELETE, "/agencymng/bookings/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers(PUT, "/agencymng/bookings/searchbydate").hasAnyAuthority("ROLE_ADMIN");
-
+*/
         //TODO fare check su questa, eventualmente decommentare, dovrebbe bastare l'authenticated sotto
         //http.authorizeRequests().antMatchers(GET, "/agencymng/bookings/**").hasAnyAuthority("ROLE_USER");
         //http.authorizeRequests().antMatchers(GET, "/agencymng/passengers/**").hasAnyAuthority("ROLE_USER");
         //POST dovrebbero potera fare tutti gli autenticati
 
-        http.authorizeRequests().anyRequest().authenticated(); //verificare poi accesso per utenti se non lo specifico
+        http.authorizeRequests().anyRequest().hasAnyAuthority("ROLE_ADMIN"); //verificare poi accesso per utenti se non lo specifico
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
