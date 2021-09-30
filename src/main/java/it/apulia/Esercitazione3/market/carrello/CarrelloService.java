@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CarrelloService {
 
-    public Carrello addCarrello(NotaSpesa notaSpesa);
+    public Carrello addCarrello(NotaSpesa notaSpesa, String email);
     public Carrello getCarrellobyId(Integer id);
     public List<Carrello> getAllCarrelli();
     public RicercaCarrello findCarrelliByAnno(Integer anno);

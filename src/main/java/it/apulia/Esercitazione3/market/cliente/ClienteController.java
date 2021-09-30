@@ -1,6 +1,7 @@
 package it.apulia.Esercitazione3.market.cliente;
 
 import it.apulia.Esercitazione3.accessManagement.UserService;
+import it.apulia.Esercitazione3.market.utils.Ricarica;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,12 @@ public class ClienteController {
     @DeleteMapping("/{email}")
     public ResponseEntity deleteCliente(@PathVariable String email){
         clienteService.deleteCliente(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{email}/ricarica")
+    public ResponseEntity updateBudget(@RequestBody Ricarica ricarica, @PathVariable String email){
+        clienteService.updateBudgetCliente(ricarica);
         return ResponseEntity.ok().build();
     }
 

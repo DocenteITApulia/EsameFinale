@@ -5,8 +5,10 @@ import it.apulia.Esercitazione3.accessManagement.model.Role;
 import it.apulia.Esercitazione3.accessManagement.model.Utente;
 import it.apulia.Esercitazione3.market.errors.MyNotAcceptableException;
 import it.apulia.Esercitazione3.market.errors.MyNotFoundException;
+import it.apulia.Esercitazione3.market.utils.Ricarica;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -59,5 +61,17 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public void deleteCliente(String email) {
         clienteRepo.deleteById(email);
+    }
+
+    @Override
+    @Transactional
+    public void updateBudgetCliente(Ricarica ricarica) {
+        if(!clienteRepo.existsById(ricarica.getEmail()))
+            throw new MyNotFoundException("Il cliente che vuoi aggiornare non esiste");
+        else{
+            Cliente temp = clienteRepo.findById(ricarica.getEmail()).get();
+            Double updatedBudget = temp.getBudget() + ricarica.getImporto();
+            temp.setBudget(updatedBudget);
+        }
     }
 }

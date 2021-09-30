@@ -91,8 +91,9 @@ public class MarketController {
     }
 
     @PostMapping("/carrelli")
-    ResponseEntity<Carrello> doSpesa(@RequestBody NotaSpesa notaSpesa){
-        Carrello temp = carrelloService.addCarrello(notaSpesa);
+    ResponseEntity<Carrello> doSpesa(@RequestBody NotaSpesa notaSpesa, @RequestParam String email){
+        Carrello temp = carrelloService.addCarrello(notaSpesa, email);
+        //TODO
         return ResponseEntity.created(URI.create(temp.getSelfUrl())).body(temp);
     }
 
