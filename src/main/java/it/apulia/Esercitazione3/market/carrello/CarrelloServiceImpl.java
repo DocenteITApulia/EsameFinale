@@ -52,7 +52,8 @@ public class CarrelloServiceImpl implements CarrelloService{
         Double delta = cliente.getBudget() - temptot;
         if(delta >= 0){
             carrelloRepo.save(temp);
-            cliente.setBudget(delta);//TODO da verificare
+            cliente.setBudget(delta);
+            clienteRepo.save(cliente);
             log.info("L'utente {} ha un budget rimanente pari a {}€",email,delta);
         }
         else{

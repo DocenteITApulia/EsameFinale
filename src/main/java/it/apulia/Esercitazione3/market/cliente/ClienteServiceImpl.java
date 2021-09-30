@@ -64,7 +64,6 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    @Transactional
     public void updateBudgetCliente(Ricarica ricarica) {
         if(!clienteRepo.existsById(ricarica.getEmail()))
             throw new MyNotFoundException("Il cliente che vuoi aggiornare non esiste");
@@ -72,6 +71,7 @@ public class ClienteServiceImpl implements ClienteService {
             Cliente temp = clienteRepo.findById(ricarica.getEmail()).get();
             Double updatedBudget = temp.getBudget() + ricarica.getImporto();
             temp.setBudget(updatedBudget);
+            clienteRepo.save(temp);
         }
     }
 }
