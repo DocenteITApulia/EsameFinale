@@ -1,10 +1,14 @@
 package it.apulia.Esercitazione3.market;
 
+import it.apulia.Esercitazione3.accessManagement.UserService;
+import it.apulia.Esercitazione3.accessManagement.model.Role;
+import it.apulia.Esercitazione3.accessManagement.model.Utente;
 import it.apulia.Esercitazione3.market.carrello.Carrello;
 import it.apulia.Esercitazione3.market.carrello.CarrelloRepo;
 import it.apulia.Esercitazione3.market.carrello.VoceScontrino;
 import it.apulia.Esercitazione3.market.prodotti.Prodotto;
 import it.apulia.Esercitazione3.market.prodotti.ProductsRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +18,35 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Configuration
 public class MarketConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(ProductsRepo repository, CarrelloRepo repoCarrello) {
+    CommandLineRunner commandLineRunner(UserService userService, ProductsRepo repository, CarrelloRepo repoCarrello) {
         return args -> {
+
+            /****USERS*****/
+            userService.saveRole(new Role("ROLE_USER"));
+            //userService.saveRole(new Role("ROLE_MANAGER"));
+            userService.saveRole(new Role("ROLE_ADMIN"));
+            userService.saveRole(new Role("ROLE_SUPER_ADMIN"));
+
+            userService.saveUtente(new Utente(null, "john@email.com", "1234", new ArrayList<>()));
+            //userService.saveUtente(new Utente(null, "will@mib.gl", "1234", new ArrayList<>()));
+            userService.saveUtente(new Utente(null, "jim@email.com", "1234", new ArrayList<>()));
+            userService.saveUtente(new Utente(null, "arnold", "1234", new ArrayList<>()));
+
+            userService.addRoleToUtente("john@email.com", "ROLE_USER");
+            //userService.addRoleToUtente("will", "ROLE_MANAGER");
+            userService.addRoleToUtente("jim@email.com", "ROLE_ADMIN");
+            userService.addRoleToUtente("arnold", "ROLE_SUPER_ADMIN");
+            userService.addRoleToUtente("arnold", "ROLE_ADMIN");
+            userService.addRoleToUtente("arnold", "ROLE_USER");
+
+            log.info("Utenti caricati");
+
+
             Prodotto prodotto1 = new Prodotto(10001,"Latte",1.20, "http://localhost:8080/market/prodotti/10001");
             Prodotto prodotto2 = new Prodotto(10002,"Uova",2.00, "http://localhost:8080/market/prodotti/10002");
             Prodotto prodotto3 = new Prodotto(10003,"Biscotti",3.60, "http://localhost:8080/market/prodotti/10003");
