@@ -6,6 +6,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class Ricarica {
-    String email;
+    String username;
     Double importo;
 }
